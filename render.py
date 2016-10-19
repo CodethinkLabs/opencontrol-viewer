@@ -132,12 +132,17 @@ def html_list(data):
     r += "</ul>\n"
     return r
 
+def make_human_readable(s):
+    # Type: (str) -> str
+    s = s.replace("_", " ")
+    return s.capitalize()
+
 def html_dict(data):
     # Type: (Dict[str, Any]) => str
     if len(data) == 0: return ""
     r = "<ul>\n"
     for (k,v) in data.items():
-        r += "<li>%s: "%(k)
+        r += "<li>%s: "%(make_human_readable(k))
         r += html_repr(v)
         r += "</li>\n"
     r += "</ul>\n"
