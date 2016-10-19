@@ -9,6 +9,7 @@ import tempfile
 import yaml
 
 from retrieval import load_yaml_recursive
+from stylesheet import style
 
 data = None
 
@@ -23,21 +24,26 @@ def main():
 def hello():
     return "Hello World!"
 
-def html_repr(v):
+def html_repr(v, dict_kind = None):
     if type(v) is dict:
-        return html_dict(v)
+        return html_dict(v, dict_kind)
     elif type(v) is list:
-        return html_list(v)
+        return html_list(v, dict_kind)
     else:
         return repr(v)
 
-def html_list(data):
+key_translation = {
+    "control_key": "Control key: <a href=\"#control_{0}\">{0}</a>",
+    "standard_key": "Standard key: <a href=\"#standard_{0}\">{0}</a>",
+    }
+
+def html_list(data, default_kind = None):
     # Type: (Sequence[Any]) => str
     if len(data) == 0: return "[]"
     if len(data) == 1: return html_repr(data[0])
     r = "<ul>\n"
     for v in data:
-        r += "<li>%s</li>\n"%html_repr(v)
+        r += "<li>%s</li>\n"%html_repr(v, default_kind)
     r += "</ul>\n"
     return r
 
@@ -46,14 +52,23 @@ def make_human_readable(s):
     s = s.replace("_", " ")
     return s.capitalize()
 
-def html_dict(data):
+def html_dict(data, default_kind = None):
     # Type: (Dict[str, Any]) => str
     if len(data) == 0: return ""
     r = "<ul>\n"
+    dict_kind = default_kind
+    if 'kind' in data: dict_kind = data['kind']
     for (k,v) in data.items():
-        r += "<li>%s: "%(make_human_readable(k))
-        r += html_repr(v)
-        r += "</li>\n"
+        if k == "narrative":
+            r += "<p><span>%s</span>"%(data[k][0]['text'].replace("\\n", "\n"))
+        elif k in key_translation:
+            print("debug: translating key type %s with data %s"%(k,repr(v)))
+            r += "<li>" + key_translation[k].format(v)+"</li>\n"
+        else:
+            # Make it an anchor
+            link_target = k if dict_kind is None else "%s_%s"%(dict_kind, k)
+            r += "<li id=\"%s\">%s: "%(link_target, make_human_readable(k))
+            r += html_repr(v, dict_kind)+"</li>\n" # html_repr is where the recursion happens
     r += "</ul>\n"
     return r
 
@@ -73,7 +88,11 @@ def data_path(path):
 
 @bottle.route('/')
 def show_repo():
-    r = "<h1>%s</h1>\n"%(data['name'])
+    r = "<html>"
+    r += "<head>"
+    r += style
+    r += "</head><body>"
+    r += "<h1>%s</h1>\n"%(data['name'])
     r += "<p>%s\n"%(data['metadata']['description'])
 
     headings = [

@@ -30,7 +30,7 @@ def fetch_git_repo(url, checkout_dir):
 
     subprocess.check_call(["git", "clone", url, checkout_dir])
 
-def fetch_yaml_repo(repo_spec, extract = None):
+def fetch_yaml_repo(repo_type, repo_spec, extract = None):
     url = repo_spec['url']
     revision = repo_spec['revision']
     temporary_checkout = False
@@ -40,7 +40,7 @@ def fetch_yaml_repo(repo_spec, extract = None):
         checkout_dir = tempfile.mkdtemp()
         temporary_checkout = True
     fetch_git_repo(url, checkout_dir)
-    r = load_yaml_recursive(checkout_dir)
+    r = load_yaml_recursive(checkout_dir, repo_type)
     if  temporary_checkout: shutil.rmtree(checkout_dir)
     if extract and extract in r:
         return r[extract]
@@ -57,13 +57,17 @@ def fetch_dependencies(data):
                 extraction = 'components'
             else:
                 extraction = k
-            fetched_list.append(fetch_yaml_repo(repo, extract=extraction))
+            fetched_list.append(fetch_yaml_repo(k, repo, extract=extraction))
         print("Replacing data['dependencies'][%s] with fetched list"%k)
         data['dependencies'][k] = fetched_list
 
-def load_local_yaml(base_path, file_list, default_filename = None):
+def child_type(parent_kind):
+    kind_transitions = { "standard": "control" }
+    return kind_transitions[parent_kind] if parent_kind in kind_transitions else parent_kind
+
+def load_local_yaml(base_path, file_list, default_filename = None, default_kind = None):
     # Type (Sequence [str]) => Dict[str, Any]
-    print("Directly loading standards from list: %s"%file_list)
+    print("Directly loading yaml from list: %s with default kind of %s"%(file_list, default_kind))
     loaded_things = {}
     for s in file_list:
         subfile_path = os.path.join(base_path, s)
@@ -86,9 +90,13 @@ def load_local_yaml(base_path, file_list, default_filename = None):
         else:
             print("Can't find file_list file: %s"%subfile_path)
             sys.exit(1)
+    if default_kind:
+        for (k,v) in loaded_things.items():
+            loaded_things[k]['kind'] = child_type(default_kind)
+        loaded_things['kind'] = default_kind
     return loaded_things
 
-def load_yaml_recursive(sourcedir):
+def load_yaml_recursive(sourcedir, file_type = "project"):
     # Type: (str) -> Dict[str,Any]
     project_file = os.path.join(sourcedir, "opencontrol.yaml")
     if os.path.exists(project_file):
@@ -99,9 +107,10 @@ def load_yaml_recursive(sourcedir):
                 if k.lower() == "dependencies":
                     fetch_dependencies(data)
                 if k.lower() == "standards":
-                    data[k] = load_local_yaml(sourcedir, v)
+                    data[k] = load_local_yaml(sourcedir, v, default_kind = 'standard')
                 if k.lower() == "certifications":
-                    data[k] = load_local_yaml(sourcedir, v)
+                    data[k] = load_local_yaml(sourcedir, v, default_kind = 'certification')
                 if k.lower() == "components":
-                    data[k] = load_local_yaml(sourcedir, v, "component.yaml")
+                    data[k] = load_local_yaml(sourcedir, v, default_filename = "component.yaml", default_kind = 'component')
+            data['kind'] = file_type
     return data
