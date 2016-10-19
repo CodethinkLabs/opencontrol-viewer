@@ -43,7 +43,8 @@ def fetch_yaml_repo(repo_type, repo_spec, extract = None):
     r = load_yaml_recursive(checkout_dir, repo_type)
     if  temporary_checkout: shutil.rmtree(checkout_dir)
     if extract and extract in r:
-        return r[extract]
+        r = r[extract]
+    r['origin'] = "%s: %s" % (url, revision)
     return r
 
 def fetch_dependencies(data):

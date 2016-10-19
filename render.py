@@ -7,6 +7,7 @@ import subprocess
 import sys
 import tempfile
 import yaml
+import cgi
 
 from retrieval import load_yaml_recursive
 from stylesheet import style
@@ -20,26 +21,25 @@ def main():
     print(yaml.dump(data))
     bottle.run(host='0.0.0.0', port=8080, debug=True)
 
-@bottle.route('/hello')
-def hello():
-    return "Hello World!"
-
 def html_repr(v, dict_kind = None):
+    # Type: (Any, str) => str
     if type(v) is dict:
         return html_dict(v, dict_kind)
     elif type(v) is list:
         return html_list(v, dict_kind)
+    elif type(v) is str:
+        return cgi.escape(v)
     else:
-        return repr(v)
+        return cgi.escape(repr(v))
 
 key_translation = {
     "control_key": "Control key: <a href=\"#control_{0}\">{0}</a>",
     "standard_key": "Standard key: <a href=\"#standard_{0}\">{0}</a>",
-    }
+}
 
 def html_list(data, default_kind = None):
     # Type: (Sequence[Any]) => str
-    if len(data) == 0: return "[]"
+    if len(data) == 0: return "None"
     if len(data) == 1: return html_repr(data[0])
     r = "<ul>\n"
     for v in data:
@@ -63,21 +63,17 @@ def html_dict(data, default_kind = None):
             r += "<p><span>%s</span>"%(data[k][0]['text'].replace("\\n", "\n"))
         elif k in key_translation:
             print("debug: translating key type %s with data %s"%(k,repr(v)))
-            r += "<li>" + key_translation[k].format(v)+"</li>\n"
+            # TODO: Unsure about using escaped things in the href target.
+            r += "<li>" + key_translation[k].format(cgi.escape(v))+"</li>\n"
         else:
-            # Make it an anchor
-            link_target = k if dict_kind is None else "%s_%s"%(dict_kind, k)
-            r += "<li id=\"%s\">%s: "%(link_target, make_human_readable(k))
-            r += html_repr(v, dict_kind)+"</li>\n" # html_repr is where the recursion happens
+            # If it didn't match any known key, it's probably a user-defined name, so make this an anchor
+            link_target = k if dict_kind is None else "%s_%s" % (dict_kind, k)
+
+            # TODO: link_target can legitimately contain '>' or '"', which will break things...
+            r += "<li id=\"%s\">%s: " % (link_target, cgi.escape (make_human_readable (k)))
+            r += html_repr (v, dict_kind) + "</li>\n" # html_repr is where the recursion happens
     r += "</ul>\n"
     return r
-
-def is_valid_data_path(path):
-    pos = data
-    for p in path:
-        if p not in pos: return False
-        pos = pos[p]
-    return True
 
 def data_path(path):
     pos = data
@@ -86,21 +82,21 @@ def data_path(path):
         pos = pos[p]
     return pos
 
+def is_valid_data_path(path):
+    return data_path(path) != None
+
 @bottle.route('/')
 def show_repo():
-    r = "<html>"
-    r += "<head>"
-    r += style
-    r += "</head><body>"
-    r += "<h1>%s</h1>\n"%(data['name'])
-    r += "<p>%s\n"%(data['metadata']['description'])
+    r = "<html><head>%s\n</head><body>" % style
+    r += "<h1>%s</h1>\n" % (data['name']) # Heading
+    r += "<p>Description for this repository: %s\n" % (data['metadata']['description'])
 
     headings = [
         (['components'], "Components specified in this repository"),
         (['dependencies', 'systems'], "External systems"),
         (['dependencies', 'standards'], "External standards"),
         (['dependencies', 'certification'], "External certification sets")
-        ]
+    ]
 
     for h in headings:
         if is_valid_data_path(h[0]):
