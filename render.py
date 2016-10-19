@@ -10,6 +10,7 @@ import yaml
 
 gitcache = "/home/jimmacarthur/gitcache"
 check_repos = False
+
 def fetch_git_repo(url, checkout_dir):
     # Type: (OpenControlTree, str, str) -> None
     # Does this repo exist?
@@ -107,7 +108,7 @@ def main():
     global data
     sourcedir = sys.argv[1] # Type: str
     data = load_yaml_recursive(sourcedir)
-    print yaml.dump(data)
+    print(yaml.dump(data))
     bottle.run(host='0.0.0.0', port=8080, debug=True)
 
 @bottle.route('/hello')
