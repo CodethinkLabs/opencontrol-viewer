@@ -1,0 +1,4 @@
+This is an experimental HTML rendering tool for OpenControl (http://opencontrol.xyz).
+
+It attempts to parse opencontrol YAML files, load dependencies recursively and sort these into a structure for one project which is easy to browse.
+
