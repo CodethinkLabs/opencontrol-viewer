@@ -10,7 +10,7 @@ import yaml
 import cgi
 
 from retrieval import load_yaml_recursive
-from stylesheet import style
+from stylesheet import style, header
 
 data = None
 
@@ -85,9 +85,14 @@ def data_path(path):
 def is_valid_data_path(path):
     return data_path(path) != None
 
+@bottle.route('/stylesheets/<path>')
+def serve_static_files(path):
+    return bottle.static_file(path, "stylesheets")
+
 @bottle.route('/')
 def show_repo():
     r = "<html><head>%s\n</head><body>" % style
+    r += header
     r += "<h1>%s</h1>\n" % (data['name']) # Heading
     r += "<p>Description for this repository: %s\n" % (data['metadata']['description'])
 
@@ -104,6 +109,8 @@ def show_repo():
             r += html_repr(data_path(h[0]))
 
     return r
+
+
 
 if __name__=="__main__":
     main()
