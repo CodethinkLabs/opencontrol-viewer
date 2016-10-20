@@ -112,7 +112,8 @@ a {
   font-weight: normal;
   color: #159957; }
 .main-content p {
-  margin-bottom: 1em; }
+    margin-bottom: 1em;
+    padding-left: 5px;}
 .main-content code {
   padding: 2px 4px;
   font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
@@ -204,7 +205,7 @@ a {
 @media screen and (min-width: 64em) {
   .main-content {
     max-width: 64rem;
-    padding: 0rem 0rem;
+    padding: 1rem 1rem;
     margin: 0 auto;
     font-size: 1.1rem; } }
 

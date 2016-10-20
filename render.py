@@ -10,7 +10,7 @@ import yaml
 import cgi
 
 from retrieval import load_yaml_recursive
-from stylesheet import style, header
+from stylesheet import style, header, footer
 
 data = None
 
@@ -93,6 +93,8 @@ def serve_static_files(path):
 def show_repo():
     r = "<html><head>%s\n</head><body>" % style
     r += header
+    r += "<section class=\"main-content\">\n"
+
     r += "<h1>%s</h1>\n" % (data['name']) # Heading
     r += "<p>Description for this repository: %s\n" % (data['metadata']['description'])
 
@@ -108,6 +110,9 @@ def show_repo():
             r += "<h2>%s</h2>\n"%(h[1])
             r += html_repr(data_path(h[0]))
 
+    r += "</section>"
+    r += footer
+            
     return r
 
 
