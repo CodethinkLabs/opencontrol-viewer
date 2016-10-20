@@ -2,3 +2,5 @@ This is an experimental HTML rendering tool for OpenControl (http://opencontrol.
 
 It attempts to parse opencontrol YAML files, load dependencies recursively and sort these into a structure for one project which is easy to browse.
 
+There is a static example of the output of this tool at: https://codethinklabs.github.io/opencontrol-viewer/
+
