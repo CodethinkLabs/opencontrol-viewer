@@ -1,0 +1,6 @@
+{
+  "name": "Opencontrol-viewer",
+  "tagline": "A HTML renderer for OpenControl data.",
+  "body": "### Opencontrol example\r\n\r\nThis page will be replaced by a static visualization of an OpenControl repository.\r\n\r\nList example to demonstrate formatting of nested lists:\r\n\r\n* Item 1\r\n  * Item 2\r\n    * Item 3\r\n      * Item 4\r\n\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
