@@ -1,53 +1,207 @@
-<!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta charset="UTF-8">
-    <title>Opencontrol-viewer</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-  </head>
-  <body>
-    <section class="page-header">
-      <h1 class="project-name">Opencontrol-viewer</h1>
-      <h2 class="project-tagline">A HTML renderer for OpenControl data.</h2>
-      <a href="https://github.com/CodethinkLabs/opencontrol-viewer" class="btn">View on GitHub</a>
-    </section>
 
-    <section class="main-content">
-      <h3>
-<a id="opencontrol-example" class="anchor" href="#opencontrol-example" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Opencontrol example</h3>
+<!-- saved from url=(0061)http://selectron.dyn.ducie.codethink.co.uk:8080/#control_AU-1 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style>
+li li {
+    list-style-type: square;
+    font-size: smaller;
+    border-style: none;
+}
 
-<p>This page will be replaced by a static visualization of an OpenControl repository.</p>
+li {
+    list-style-type: square;
+    font-size: xx-large;
+    border-style: solid;
+}
 
-<p>List example to demonstrate formatting of nested lists:</p>
+</style>
 
+<link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+<link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+
+</head><body><h1>freedonia.fd</h1>
+<p>Description for this repository: hello_world
+</p><h2>Components specified in this repository</h2>
 <ul>
-<li>Item 1
-
-<ul>
-<li>Item 2
-
-<ul>
-<li>Item 3
-
-<ul>
-<li>Item 4</li>
+<li id="component_Audit Policy">Audit policy: <ul>
+<li id="component_kind">Kind: component</li>
+<li id="component_name">Name: Audit Policy</li>
+<li id="component_documentation_complete">Documentation complete: False</li>
+<li id="component_schema_version">Schema version: 3.0.0</li>
+<li id="component_references">References: <ul>
+<li id="path">Path: https://github.com/opencontrol/freedonia-policies/wiki/Audit-Policy</li>
+<li id="name">Name: AU Policy</li>
 </ul>
+</li>
+<li id="component_satisfies">Satisfies: <ul>
+<li><ul>
+<li>Control key: <a href="http://selectron.dyn.ducie.codethink.co.uk:8080/#control_AU-1">AU-1</a></li>
+<li>Standard key: <a href="http://selectron.dyn.ducie.codethink.co.uk:8080/#standard_FRIST-800-53">FRIST-800-53</a></li>
+<li id="component_covered_by">Covered by: None</li>
+<li id="component_implementation_status">Implementation status: implemented</li>
+<p><span>This text describes how our organization is meeting the requirements for the
+Audit policy, and also references a more complete description at ./AU_policy/README.md
+
+Since the AU-1 `control` is to document and disseminate a policy on Audit and Accountability, then
+this narrative suffices to provide that control. A verification step could be something
+that checks that the referenced policy is no more than 365 days old.
+</span></p></ul>
+</li>
+<li><ul>
+<li>Control key: <a href="http://selectron.dyn.ducie.codethink.co.uk:8080/#control_AU-2">AU-2</a></li>
+<li>Standard key: <a href="http://selectron.dyn.ducie.codethink.co.uk:8080/#standard_FRIST-800-53">FRIST-800-53</a></li>
+<li id="component_covered_by">Covered by: None</li>
+<li id="component_implementation_status">Implementation status: none</li>
+<p><span>Application and Server logs are sent to PaperTrail to provide audit
+reduction and report generation capabilites for Freedonia Devops and end users
+of the Freedonia hello_world system.
+
+PaperTrail is a SaaS for aggregation of audit log data across multiple systems and tiers
+
+With the PaperTrail capability the organizations's operations and development teams
+can structure and customize audit logs queries to specific app instances, API
+calls, system metrics, user access, system components, network traffic flow and
+other criteria.
+</span></p></ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li id="component_kind">Kind: component</li>
+</ul>
+<h2>External systems</h2>
+<ul>
+<li id="component_origin">Origin: https://github.com/opencontrol/freedonia-aws-compliance/: master</li>
+<li id="component_kind">Kind: component</li>
+<li id="component_AWS Core">Aws core: <ul>
+<li id="component_kind">Kind: component</li>
+<li id="component_documentation_complete">Documentation complete: False</li>
+<li id="component_satisfies">Satisfies: <ul>
+<li id="covered_by">Covered by: None</li>
+<li id="control_origin">Control origin: inherited</li>
+<p><span>PE-2 - Physical Access Authorizations
+
+This text describes how our organization is meeting the requirements for the
+PE-2 by dint of inheriting an approved set of Physical Environment controls
+with our use of AWS east/west or AWS GovCloud.
+</span></p><li>Standard key: <a href="http://selectron.dyn.ducie.codethink.co.uk:8080/#standard_FRIST-800-53">FRIST-800-53</a></li>
+<li>Control key: <a href="http://selectron.dyn.ducie.codethink.co.uk:8080/#control_PE-2">PE-2</a></li>
+<li id="implementation_status">Implementation status: complete</li>
+</ul>
+</li>
+<li id="component_schema_version">Schema version: 3.0.0</li>
+<li id="component_name">Name: AWS Core</li>
+</ul>
+</li>
+<li id="component_AWS Implementation">Aws implementation: <ul>
+<li id="component_kind">Kind: component</li>
+<li id="component_name">Name: AWS Implementation</li>
+<li id="component_documentation_complete">Documentation complete: False</li>
+<li id="component_schema_version">Schema version: 3.0.0</li>
+<li id="component_references">References: <ul>
+<li id="path">Path: https://github.com/opencontrol/freedonia-aws-compliance/wiki/Security-Controls</li>
+<li id="type">Type: URL</li>
+<li id="name">Name: SC Policy</li>
+</ul>
+</li>
+<li id="component_satisfies">Satisfies: <ul>
+<li><ul>
+<li>Control key: <a href="http://selectron.dyn.ducie.codethink.co.uk:8080/#control_AU-2">AU-2</a></li>
+<li>Standard key: <a href="http://selectron.dyn.ducie.codethink.co.uk:8080/#standard_FRIST-800-53">FRIST-800-53</a></li>
+<li id="component_covered_by">Covered by: None</li>
+<li id="component_implementation_status">Implementation status: none</li>
+<p><span>AU-2 - Audit Events
+All AWS events are sent to AWS CloudWatch.
+This is implemented with our Terraform build using the
+`aws_cloudtrail` resource (https://www.terraform.io/docs/providers/aws/r/cloudtrail.html)
+
+A verification step can be done by confirming the existence
+of the Cloudwatch bucket etc. with InSpec.
+</span></p></ul>
+</li>
+<li><ul>
+<li>Control key: <a href="http://selectron.dyn.ducie.codethink.co.uk:8080/#control_SC-1">SC-1</a></li>
+<li>Standard key: <a href="http://selectron.dyn.ducie.codethink.co.uk:8080/#standard_FRIST-800-53">FRIST-800-53</a></li>
+<li id="component_covered_by">Covered by: None</li>
+<li id="component_implementation_status">Implementation status: none</li>
+<p><span>SC-1 - System and Communications Protection Policy and Procedures
+This text describes how our organization is meeting the requirements for the
+Security Controls policy, and also references a more complete description at
+the referenced document at
+https://github.com/opencontrol/freedonia-aws-compliance/wiki/Security-Controls
+
+
+Since the SC-1 `control` is to document and disseminate a policy on
+Security Controls
+this narrative suffices to provide that control. A verification step could be something
+that checks that the referenced policy is no more than 365 days old.
+</span></p></ul>
+</li>
+<li><ul>
+<li>Control key: <a href="http://selectron.dyn.ducie.codethink.co.uk:8080/#control_SC-7">SC-7</a></li>
+<li>Standard key: <a href="http://selectron.dyn.ducie.codethink.co.uk:8080/#standard_FRIST-800-53">FRIST-800-53</a></li>
+<li id="component_covered_by">Covered by: None</li>
+<li id="component_implementation_status">Implementation status: none</li>
+<p><span>SC-7 - Boundary protection
+
+Boundary protection is provided, in AWS, with Security Groups that do not allow
+ingress except to port 443 on the ELBs
+
+Verification: No security groups allow 0.0.0.0 inbound except ones named 'elb.*' can
+allowed port 443 to 0.0.0.0 (testing with InspecAws)
+</span></p></ul>
 </li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
-
-<footer class="site-footer">
-  <span class="site-footer-owner"><a href="https://github.com/CodethinkLabs/opencontrol-viewer">Opencontrol-viewer</a> is maintained by <a href="https://github.com/CodethinkLabs">CodethinkLabs</a>.</span>
-  <span class="site-footer-credits">This was initially generated by <a href="https://pages.github.com">GitHub Pages</a> and uses a modified version of the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
-</footer>
-
-    </section>
-  </body>
-</html>
+<h2>External standards</h2>
+<ul>
+<li id="standard_origin">Origin: https://github.com/opencontrol/freedonia-frist/: master</li>
+<li id="standard_kind">Kind: standard</li>
+<li id="standard_FRIST-800-53">Frist-800-53: <ul>
+<li id="control_PE-2">Pe-2: <ul>
+<li id="control_name">Name: Physical Access Authorizations</li>
+<li id="control_family">Family: PE</li>
+</ul>
+</li>
+<li id="control_XX-1">Xx-1: <ul>
+<li id="control_name">Name: Dummy Mock Control</li>
+<li id="control_family">Family: XX</li>
+</ul>
+</li>
+<li id="control_name">Name: FRIST-800-53</li>
+<li id="control_AU-2 (3)">Au-2 (3): <ul>
+<li id="control_name">Name: Audit Events | Reviews and Updates</li>
+<li id="control_family">Family: AU</li>
+</ul>
+</li>
+<li id="control_kind">Kind: control</li>
+<li id="control_AU-1">Au-1: <ul>
+<li id="control_name">Name: Audit and Accountability Policy and Procedures</li>
+<li id="control_family">Family: AU</li>
+</ul>
+</li>
+<li id="control_SC-7">Sc-7: <ul>
+<li id="control_name">Name: Boundary Protection</li>
+<li id="control_family">Family: SC</li>
+</ul>
+</li>
+<li id="control_AU-2">Au-2: <ul>
+<li id="control_name">Name: Audit Events</li>
+<li id="control_family">Family: AU</li>
+</ul>
+</li>
+<li id="control_SC-1">Sc-1: <ul>
+<li id="control_name">Name: System and Communications Protection Policy and Procedures</li>
+<li id="control_family">Family: SC</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</body></html>
