@@ -95,6 +95,7 @@ def load_local_yaml(base_path, file_list, default_filename = None, default_kind 
         for (k,v) in loaded_things.items():
             loaded_things[k]['kind'] = child_type(default_kind)
         loaded_things['kind'] = default_kind
+    loaded_things['origin'] = "Local file"
     return loaded_things
 
 def load_yaml_recursive(sourcedir, file_type = "project"):

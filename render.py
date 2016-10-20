@@ -35,6 +35,9 @@ def html_repr(v, dict_kind = None):
 key_translation = {
     "control_key": "Control key: <a href=\"#control_{0}\">{0}</a>",
     "standard_key": "Standard key: <a href=\"#standard_{0}\">{0}</a>",
+    "path": "Path: <a href=\"{0}\">{0}</a>",
+    "kind": None,
+    "name": None,
 }
 
 def html_list(data, default_kind = None):
@@ -50,7 +53,9 @@ def html_list(data, default_kind = None):
 def make_human_readable(s):
     # Type: (str) -> str
     s = s.replace("_", " ")
-    return s.capitalize()
+    # Capitalize the first letter, but don't lowercase any further ones.
+    # This may be an abbreviation like "AWS".
+    return s[0].upper() + s[1:]
 
 def html_dict(data, default_kind = None):
     # Type: (Dict[str, Any]) => str
@@ -60,11 +65,12 @@ def html_dict(data, default_kind = None):
     if 'kind' in data: dict_kind = data['kind']
     for (k,v) in data.items():
         if k == "narrative":
-            r += "<p><span>%s</span>"%(data[k][0]['text'].replace("\\n", "\n"))
+            r += "<p><span>%s</span>"%(data[k][0]['text'].replace("\n", "<br>"))
         elif k in key_translation:
-            print("debug: translating key type %s with data %s"%(k,repr(v)))
-            # TODO: Unsure about using escaped things in the href target.
-            r += "<li>" + key_translation[k].format(cgi.escape(v))+"</li>\n"
+            if key_translation[k]:
+                print("debug: translating key type %s with data %s"%(k,repr(v)))
+                # TODO: Unsure about using escaped things in the href target.
+                r += "<li>" + key_translation[k].format(cgi.escape(v))+"</li>\n"
         else:
             # If it didn't match any known key, it's probably a user-defined name, so make this an anchor
             link_target = k if dict_kind is None else "%s_%s" % (dict_kind, k)
