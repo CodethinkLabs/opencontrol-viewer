@@ -1,4 +1,4 @@
-* {
+ {
   box-sizing: border-box; }
 
 body {
@@ -6,7 +6,6 @@ body {
   margin: 0;
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 16px;
-  line-height: 1.5;
   color: #606c71; }
 
 a {
@@ -57,7 +56,7 @@ a {
   color: #fff;
   text-align: center;
   background-color: #159957;
-  background-image: linear-gradient(120deg, #155799, #159957); }
+  background-image: linear-gradient(120deg, #7f7f7f, #7fc07f); }
 
 @media screen and (min-width: 64em) {
   .page-header {
@@ -65,7 +64,7 @@ a {
 
 @media screen and (min-width: 42em) and (max-width: 64em) {
   .page-header {
-    padding: 3rem 4rem; } }
+    padding: 1rem 1rem; } }
 
 @media screen and (max-width: 42em) {
   .page-header {
@@ -88,7 +87,6 @@ a {
     font-size: 1.75rem; } }
 
 .project-tagline {
-  margin-bottom: 2rem;
   font-weight: normal;
   opacity: 0.7; }
 
@@ -206,7 +204,7 @@ a {
 @media screen and (min-width: 64em) {
   .main-content {
     max-width: 64rem;
-    padding: 2rem 6rem;
+    padding: 0rem 0rem;
     margin: 0 auto;
     font-size: 1.1rem; } }
 
