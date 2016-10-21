@@ -65,7 +65,14 @@ def html_dict(data, default_kind = None):
     if 'kind' in data: dict_kind = data['kind']
     for (k,v) in data.items():
         if k == "narrative":
-            r += "<p><span>%s</span>"%(data[k][0]['text'].replace("\n", "<br>"))
+            print("Processing narrative tag: %s"%(repr(data[k])))
+            if type(data[k]) == list:
+                # Component Schema v3
+                for field in data[k]:
+                    r += "<p><span>%s</span>"%(field['text'].replace("\n", "<br>"))
+            else:
+                # Component Schema <v3
+                r += "<p><span>%s</span>"%(data[k].replace("\n", "<br>"))
         elif k in key_translation:
             if key_translation[k]:
                 print("debug: translating key type %s with data %s"%(k,repr(v)))
