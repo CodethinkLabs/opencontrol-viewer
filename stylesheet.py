@@ -13,6 +13,14 @@ li {
     padding: 5px;
     margin-bottom: 5px;
 }
+
+.positive {
+    background-color: #00ff00;
+}
+
+.negative {
+    background-color: #ff7f7f;
+}
 </style>
 
 <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">

@@ -15,8 +15,7 @@ def match_certs_to_components(data):
     components = [data['components']] + data['dependencies']['systems']
     for c in components:
         for (policy_name, policy_data) in c.items():
-            print("Processing component_set: %s"%(policy_data))
-            if type(policy_name) == dict:
+            if type(policy_data) == dict:
                 for s in policy_data['satisfies']:
                     controls_satisfied.append(s['control_key'])
 

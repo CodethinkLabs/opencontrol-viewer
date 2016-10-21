@@ -71,8 +71,10 @@ def html_dict(data, default_kind = None):
         if dict_kind == "certification" and type(v) == dict:
             for (standard_name, standard_data) in v['standards'].items():
                 for(control_name, control_data) in standard_data.items():
-                    r += "<li>%s (from %s) Satisfied? %s</li>\n"%(control_name, standard_name, "Yes" if control_name in controls_satisfied else "No")
-                    #for (standard_name, standard_data) in standard.items():
+                    if control_name in controls_satisfied:
+                        r += "<li class=\"positive\">%s (from %s) - Satisfied</li>\n"%(control_name, standard_name)
+                    else:
+                        r += "<li class=\"negative\">%s (from %s) - Not satisfied</li>\n"%(control_name, standard_name)
         elif k == "narrative":
             print("Processing narrative tag: %s"%(repr(data[k])))
             if type(data[k]) == list:
