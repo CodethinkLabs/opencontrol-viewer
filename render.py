@@ -11,14 +11,18 @@ import cgi
 
 from retrieval import load_yaml_recursive
 from stylesheet import style, header, footer
+from match_certs import match_certs_to_components
 
 data = None
+controls_satisfied = None
 
 def main():
-    global data
+    global data, controls_satisfied
     sourcedir = sys.argv[1] # Type: str
     data = load_yaml_recursive(sourcedir)
+    controls_satisfied = match_certs_to_components(data)
     print(yaml.dump(data))
+    print "controls_satisfied: %s"%controls_satisfied
     bottle.run(host='0.0.0.0', port=8080, debug=True)
 
 def html_repr(v, dict_kind = None):
@@ -64,7 +68,12 @@ def html_dict(data, default_kind = None):
     dict_kind = default_kind
     if 'kind' in data: dict_kind = data['kind']
     for (k,v) in data.items():
-        if k == "narrative":
+        if dict_kind == "certification" and type(v) == dict:
+            for (standard_name, standard_data) in v['standards'].items():
+                for(control_name, control_data) in standard_data.items():
+                    r += "<li>%s (from %s) Satisfied? %s</li>\n"%(control_name, standard_name, "Yes" if control_name in controls_satisfied else "No")
+                    #for (standard_name, standard_data) in standard.items():
+        elif k == "narrative":
             print("Processing narrative tag: %s"%(repr(data[k])))
             if type(data[k]) == list:
                 # Component Schema v3
@@ -115,7 +124,7 @@ def show_repo():
         (['components'], "Components specified in this repository"),
         (['dependencies', 'systems'], "External systems"),
         (['dependencies', 'standards'], "External standards"),
-        (['dependencies', 'certification'], "External certification sets")
+        (['dependencies', 'certifications'], "External certification sets")
     ]
 
     for h in headings:
