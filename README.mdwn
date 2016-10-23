@@ -17,7 +17,7 @@ This tool is experimental and you should expect some functionality to be incompl
 
 # Operation
 
-Run "./render.py <dir>" where <dir> is a directory containing an OpenControl project, that is, one which contains an opencontrol.yaml file.
+Run ```./render.py <dir>``` where ```<dir>``` is a directory containing an OpenControl project, that is, one which contains an opencontrol.yaml file.
 
 To obtain a simple example OpenControl project, clone this repository:
 
