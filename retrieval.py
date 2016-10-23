@@ -7,7 +7,7 @@ import sys
 import tempfile
 import yaml
 
-gitcache = "/home/jimmacarthur/gitcache"
+gitcache = os.path.expanduser("~/gitcache")
 check_repos = False
 
 # This library is concerned with retriving OpenControl data. You should call
@@ -15,13 +15,13 @@ check_repos = False
 # opencontrol.yaml file. This will return a data structure which represents
 # that project and all its dependencies (assuming they can be retrieved).
 
-def fetch_git_repo(url, checkout_dir):
+def fetch_git_repo(url, checkout_dir, options):
     # Type: (OpenControlTree, str, str) -> None
     # Does this repo exist?
     if os.path.exists(checkout_dir):
         gitdir = os.path.join(checkout_dir, ".git")
         if os.path.exists(gitdir):
-            if check_repos:
+            if options is None or options.nofetch == False:
                 print("fetch_git_repo: update %s,%s"%(url, checkout_dir))
                 subprocess.check_call(["git", "--git-dir", gitdir, "fetch"])
                 # TODO: You haven't checked that's actually a checkout of url!
@@ -30,7 +30,7 @@ def fetch_git_repo(url, checkout_dir):
 
     subprocess.check_call(["git", "clone", url, checkout_dir])
 
-def fetch_yaml_repo(repo_type, repo_spec, extract = None):
+def fetch_yaml_repo(repo_type, repo_spec, options, extract = None):
     url = repo_spec['url']
     revision = repo_spec['revision']
     temporary_checkout = False
@@ -39,7 +39,7 @@ def fetch_yaml_repo(repo_type, repo_spec, extract = None):
     else:
         checkout_dir = tempfile.mkdtemp()
         temporary_checkout = True
-    fetch_git_repo(url, checkout_dir)
+    fetch_git_repo(url, checkout_dir, options)
     r = load_yaml_recursive(checkout_dir, repo_type)
     if  temporary_checkout: shutil.rmtree(checkout_dir)
     if extract and extract in r:
@@ -47,7 +47,7 @@ def fetch_yaml_repo(repo_type, repo_spec, extract = None):
     r['origin'] = "%s: %s" % (url, revision)
     return r
 
-def fetch_dependencies(data):
+def fetch_dependencies(data, options):
     # Type (Dict[str,Any]) => None
     print("About to fetch depenencies for data: %s"%data['dependencies'])
     for (k,v) in data['dependencies'].items():
@@ -58,7 +58,7 @@ def fetch_dependencies(data):
                 extraction = 'components'
             else:
                 extraction = k
-            fetched_list.append(fetch_yaml_repo(k, repo, extract=extraction))
+            fetched_list.append(fetch_yaml_repo(k, repo, options, extract=extraction))
         print("Replacing data['dependencies'][%s] with fetched list"%k)
         data['dependencies'][k] = fetched_list
 
@@ -98,7 +98,7 @@ def load_local_yaml(base_path, file_list, default_filename = None, default_kind 
     loaded_things['origin'] = "Local file"
     return loaded_things
 
-def load_yaml_recursive(sourcedir, file_type = "project"):
+def load_yaml_recursive(sourcedir, options = None, file_type = "project"):
     # Type: (str) -> Dict[str,Any]
     project_file = os.path.join(sourcedir, "opencontrol.yaml")
     if os.path.exists(project_file):
@@ -107,7 +107,7 @@ def load_yaml_recursive(sourcedir, file_type = "project"):
             data = yaml.load(y)
             for (k,v) in data.items():
                 if k.lower() == "dependencies":
-                    fetch_dependencies(data)
+                    fetch_dependencies(data, options)
                 if k.lower() == "standards":
                     data[k] = load_local_yaml(sourcedir, v, default_kind = 'standard')
                 if k.lower() == "certifications":

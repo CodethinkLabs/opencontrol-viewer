@@ -4,3 +4,6 @@ It attempts to parse opencontrol YAML files, load dependencies recursively and s
 
 There is a static example of the output of this tool at: https://codethinklabs.github.io/opencontrol-viewer/
 
+# Requirements
+
+* Bottle framework (apt-get python-bottle)

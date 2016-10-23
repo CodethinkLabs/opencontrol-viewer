@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import argparse
 import bottle
 import os
 import shutil
@@ -17,9 +18,12 @@ data = None
 controls_satisfied = None
 
 def main():
+    parser = argparse.ArgumentParser(description='Visualize OpenControl projects')
+    parser.add_argument('sourcedir', help="A directory containing an OpenControl project")
+    parser.add_argument('--nofetch', default=False, action="store_const", const=True, help='Use cached git directories without fetching')
+    options = parser.parse_args()
     global data, controls_satisfied
-    sourcedir = sys.argv[1] # Type: str
-    data = load_yaml_recursive(sourcedir)
+    data = load_yaml_recursive(options.sourcedir, options)
     controls_satisfied = match_certs_to_components(data)
     print(yaml.dump(data))
     print "controls_satisfied: %s"%controls_satisfied
