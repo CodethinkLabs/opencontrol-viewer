@@ -18,9 +18,13 @@ data = None
 controls_satisfied = None
 
 def main():
-    parser = argparse.ArgumentParser(description='Visualize OpenControl projects')
-    parser.add_argument('sourcedir', help="A directory containing an OpenControl project")
-    parser.add_argument('--nofetch', default=False, action="store_const", const=True, help='Use cached git directories without fetching')
+    parser = argparse.ArgumentParser(description =
+                                     'Visualize OpenControl projects')
+    parser.add_argument('sourcedir', help =
+                        "A directory containing an OpenControl project")
+    parser.add_argument('--nofetch', default = False, action="store_const",
+                        const = True, help =
+                        'Use cached git directories without fetching')
     options = parser.parse_args()
     global data, controls_satisfied
     data = load_yaml_recursive(options.sourcedir, options)
@@ -29,16 +33,16 @@ def main():
     print "controls_satisfied: %s"%controls_satisfied
     bottle.run(host='0.0.0.0', port=8080, debug=True)
 
-def html_repr(v, dict_kind = None):
+def html_repr(value, dict_kind = None):
     # Type: (Any, str) => str
-    if type(v) is dict:
-        return html_dict(v, dict_kind)
-    elif type(v) is list:
-        return html_list(v, dict_kind)
-    elif type(v) is str:
-        return cgi.escape(v)
+    if type(value) is dict:
+        return html_dict(value, dict_kind)
+    elif type(value) is list:
+        return html_list(value, dict_kind)
+    elif type(value) is str:
+        return cgi.escape(value)
     else:
-        return cgi.escape(repr(v))
+        return cgi.escape(repr(value))
 
 key_translation = {
     "control_key": "Control key: <a href=\"#control_{0}\">{0}</a>",
@@ -52,56 +56,77 @@ def html_list(data, default_kind = None):
     # Type: (Sequence[Any]) => str
     if len(data) == 0: return "None"
     if len(data) == 1: return html_repr(data[0])
-    r = "<ul>\n"
-    for v in data:
-        r += "<li>%s</li>\n"%html_repr(v, default_kind)
-    r += "</ul>\n"
-    return r
+    html = "<ul>\n"
+    for list_item in data:
+        html += "<li>%s</li>\n"%html_repr(list_item, default_kind)
+    html += "</ul>\n"
+    return html
 
-def make_human_readable(s):
+def make_human_readable(field_name):
     # Type: (str) -> str
-    s = s.replace("_", " ")
+    human_name = field_name.replace("_", " ")
     # Capitalize the first letter, but don't lowercase any further ones.
     # This may be an abbreviation like "AWS".
-    return s[0].upper() + s[1:]
+    return human_name[0].upper() + human_name[1:]
+
+# Converts trees marked with the type 'certification' into HTML
+# representing the certification status as list items.
+def certification_status_items(certification_data):
+    # Type (Dict[str, Any]) => str
+    html = ""
+    for (standard_name, standard_data) in certification_data:
+        for(control_name, control_data) in standard_data.items():
+            if control_name in controls_satisfied:
+                html += "<li class=\"positive\">%s (from %s) - Satisfied</li>\n"%(control_name, standard_name)
+            else:
+                html += "<li class=\"negative\">%s (from %s) - Not satisfied</li>\n"%(control_name, standard_name)
+    return html
+
+# Attempts to encode a block comment (usually a 'description' field)
+# into a HTML string.
+def html_encode_block_quote(yaml_quote):
+    return yaml_quote.replace("\n", "<br>")
 
 def html_dict(data, default_kind = None):
     # Type: (Dict[str, Any]) => str
     if len(data) == 0: return ""
-    r = "<ul>\n"
+    html = "<ul>\n"
     dict_kind = default_kind
     if 'kind' in data: dict_kind = data['kind']
     for (k,v) in data.items():
         if dict_kind == "certification" and type(v) == dict:
-            for (standard_name, standard_data) in v['standards'].items():
-                for(control_name, control_data) in standard_data.items():
-                    if control_name in controls_satisfied:
-                        r += "<li class=\"positive\">%s (from %s) - Satisfied</li>\n"%(control_name, standard_name)
-                    else:
-                        r += "<li class=\"negative\">%s (from %s) - Not satisfied</li>\n"%(control_name, standard_name)
+            html += certification_status_items(v['standards'].items())
         elif k == "narrative":
-            print("Processing narrative tag: %s"%(repr(data[k])))
+            print("Processing narrative tag: %s"%(repr(v)))
             if type(data[k]) == list:
                 # Component Schema v3
-                for field in data[k]:
-                    r += "<p><span>%s</span>"%(field['text'].replace("\n", "<br>"))
+                for field in data[k]:                    
+                    html += "<p><span>"
+                    html += html_encode_block_quote(field['text'])
+                    html += "</span>"
             else:
                 # Component Schema <v3
-                r += "<p><span>%s</span>"%(data[k].replace("\n", "<br>"))
+                html += "<p><span>%s</span>" % (v.replace("\n", "<br>"))
         elif k in key_translation:
             if key_translation[k]:
-                print("debug: translating key type %s with data %s"%(k,repr(v)))
                 # TODO: Unsure about using escaped things in the href target.
-                r += "<li>" + key_translation[k].format(cgi.escape(v))+"</li>\n"
+                html += "<li>"
+                html += key_translation[k].format(cgi.escape(v))+"</li>\n"
         else:
-            # If it didn't match any known key, it's probably a user-defined name, so make this an anchor
+            # If it didn't match any known key, it's probably a user-defined
+            # name, so make this an anchor
             link_target = k if dict_kind is None else "%s_%s" % (dict_kind, k)
 
-            # TODO: link_target can legitimately contain '>' or '"', which will break things...
-            r += "<li id=\"%s\">%s: " % (link_target, cgi.escape (make_human_readable (k)))
-            r += html_repr (v, dict_kind) + "</li>\n" # html_repr is where the recursion happens
-    r += "</ul>\n"
-    return r
+            # TODO: link_target can legitimately contain '>' or '"', which
+            # will break things...
+            html += "<li id=\"%s\">%s: " % (link_target,
+                                            cgi.escape (
+                                                make_human_readable (k) ) )
+
+            # html_repr can recursively call this function
+            html += html_repr (v, dict_kind) + "</li>\n"
+    html += "</ul>\n"
+    return html
 
 def data_path(path):
     pos = data
@@ -124,7 +149,8 @@ def show_repo():
     r += "<section class=\"main-content\">\n"
 
     r += "<h1>%s</h1>\n" % (data['name']) # Heading
-    r += "<p>Description for this repository: %s\n" % (data['metadata']['description'])
+    r += "<p>Description for this repository: %s\n" % (
+        data['metadata']['description'] )
 
     headings = [
         (['components'], "Components specified in this repository"),

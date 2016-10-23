@@ -8,7 +8,6 @@ import tempfile
 import yaml
 
 gitcache = os.path.expanduser("~/gitcache")
-check_repos = False
 
 # This library is concerned with retriving OpenControl data. You should call
 # "load_yaml_recursive", passing the name of a directory which contains an
@@ -47,6 +46,8 @@ def fetch_yaml_repo(repo_type, repo_spec, options, extract = None):
     r['origin'] = "%s: %s" % (url, revision)
     return r
 
+# Fetches the 'dependencies' section of an opencontrol.yaml file,
+# which should have been loaded as 'data'.
 def fetch_dependencies(data, options):
     # Type (Dict[str,Any]) => None
     print("About to fetch depenencies for data: %s"%data['dependencies'])
@@ -79,9 +80,9 @@ def load_local_yaml(base_path, file_list, default_filename = None, default_kind 
                 else:
                     print("%s is a directory and there is no default filename given." % subfile_path)
                     sys.exit(1)
-                # TODO: As well as using the default filename, in the case of component
-                # directories, it may be necessary to add in any yaml files in that
-                # directory.
+                # TODO: As well as using the default filename, in the case of
+                # component directories, it may be necessary to add in any
+                # yaml files in that directory.
 
             with open(subfile_path, "rt") as f:
                 y = f.read()
