@@ -8,7 +8,7 @@ import subprocess
 import sys
 import tempfile
 import yaml
-import cgi
+import cgi # Required only for HTML escaping.
 
 from retrieval import load_yaml_recursive
 from stylesheet import style, header, footer
