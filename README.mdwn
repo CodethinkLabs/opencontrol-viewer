@@ -4,6 +4,27 @@ It attempts to parse opencontrol YAML files, load dependencies recursively and s
 
 There is a static example of the output of this tool at: https://codethinklabs.github.io/opencontrol-viewer/
 
+This is meant to be a lightweight tool to help introduce people to OpenControl. The Compliance Masonry tool is a more mature tool which should be used when producing real compliance documents. It can be found at https://github.com/opencontrol/compliance-masonry.
+
+# Status
+
+This tool is experimental and you should expect some functionality to be incomplete or incorrect.
+
 # Requirements
 
 * Bottle framework (apt-get python-bottle)
+* Python YAML library (apt-get python-yaml)
+
+# Operation
+
+Run "./render.py <dir>" where <dir> is a directory containing an OpenControl project, that is, one which contains an opencontrol.yaml file.
+
+To obtain a simple example OpenControl project, clone this repository:
+
+    git clone https://github.com/opencontrol/freedonia-compliance.git
+
+For a more involved one:
+
+    git clone git@github.com:18F/cg-compliance.git
+
+This tool will clone any repositories references in the given project into temporary directoties. If you have a directory called "~/gitcache", then remote git repositories will be fetched there instead. If you specify "--nofetch", then it will not attempt to fetch updates for cached git repositories and will just use the cached version. This greatly decreases the startup time, and is useful for testing.
