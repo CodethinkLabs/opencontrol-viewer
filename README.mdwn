@@ -12,8 +12,8 @@ This tool is experimental and you should expect some functionality to be incompl
 
 # Requirements
 
-* Bottle framework (apt-get python-bottle)
-* Python YAML library (apt-get python-yaml)
+* Bottle framework (sudo apt-get python-bottle)
+* Python YAML library (sudo apt-get python-yaml)
 
 # Operation
 
