@@ -26,6 +26,8 @@
 
 def match_certs_to_components(data):
     controls_expected = []
+    if 'dependencies' not in data:
+        return []
     certification_sets = data['dependencies']['certifications']
     for certification_set in certification_sets:
         for (certification_name, cert_data) in certification_set.items():

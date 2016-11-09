@@ -178,6 +178,7 @@ def show_repo():
 
     headings = [
         (['components'], "Components specified in this repository"),
+        (['standards'], "Standards specified in this repository"),
         (['dependencies', 'systems'], "External systems"),
         (['dependencies', 'standards'], "External standards"),
         (['dependencies', 'certifications'], "External certification sets")

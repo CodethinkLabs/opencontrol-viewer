@@ -111,7 +111,14 @@ def load_local_yaml(base_path, file_list, default_filename = None, default_kind 
             with open(subfile_path, "rt") as f:
                 y = f.read()
                 data = yaml.load(y)
-                loaded_things[data['name']] = data
+                if 'name' in data:
+                    subfile_name = data['name']
+                elif 'title' in data:
+                    subfile_name = data['title']
+                else:
+                    print("I'm attempting to load '%s' but I have no name for that field; using the filename"%subfile_path)
+                    subfile_name = subfile_path
+                loaded_things[subfile_name] = data
                 print("Loaded standard %s: %s"%(subfile_path, repr(data)))
         else:
             print("Can't find file_list file: %s"%subfile_path)
@@ -140,4 +147,7 @@ def load_yaml_recursive(sourcedir, options = None, file_type = "project"):
                 if k.lower() == "components":
                     data[k] = load_local_yaml(sourcedir, v, default_filename = "component.yaml", default_kind = 'component')
             data['kind'] = file_type
+    else:
+        print("Referenced file %s does not exist"%project_file)
+        sys.exit(1)
     return data
