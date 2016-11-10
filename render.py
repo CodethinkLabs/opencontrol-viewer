@@ -120,17 +120,23 @@ def html_dict(data, default_kind = None):
     for (k,v) in data.items():
         if dict_kind == "certification" and type(v) == dict:
             html += certification_status_items(v['standards'].items())
-        elif k == "narrative":
+        elif k == "narrative" or k == "description":
             print("Processing narrative tag: %s"%(repr(v)))
             if type(data[k]) == list:
                 # Component Schema v3
-                for field in data[k]:                    
+                for field in data[k]:
                     html += "<p><span>"
                     html += html_encode_block_quote(field['text'])
                     html += "</span>"
             else:
                 # Component Schema <v3
                 html += "<p><span>%s</span>" % (v.replace("\n", "<br>"))
+        elif k == "mapped-here":
+            for n in v:
+                if n.startswith("r/"):
+                    html += "<li>Satisfies requirement: %s\n</li>\n"%n[2:]
+                else:
+                    html += "<li>Mapped here: %s\n</li>\n"%n
         elif k in key_translation:
             if key_translation[k]:
                 # TODO: Unsure about using escaped things in the href target.
@@ -179,6 +185,7 @@ def show_repo():
     headings = [
         (['components'], "Components specified in this repository"),
         (['standards'], "Standards specified in this repository"),
+        (['certifications'], "Certification specified in this repository"),
         (['dependencies', 'systems'], "External systems"),
         (['dependencies', 'standards'], "External standards"),
         (['dependencies', 'certifications'], "External certification sets")

@@ -117,7 +117,7 @@ def load_local_yaml(base_path, file_list, default_filename = None, default_kind 
                     subfile_name = data['title']
                 else:
                     print("I'm attempting to load '%s' but I have no name for that field; using the filename"%subfile_path)
-                    subfile_name = subfile_path
+                    (subfile_name, _) = os.path.splitext(os.path.basename(subfile_path))
                 loaded_things[subfile_name] = data
                 print("Loaded standard %s: %s"%(subfile_path, repr(data)))
         else:
